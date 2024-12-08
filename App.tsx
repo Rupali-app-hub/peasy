@@ -6,18 +6,11 @@ import UserListScreen from './screens/UserListScreen';
 import UserDetailScreen from './screens/UserDetailScreen';
 
 const Stack = createStackNavigator();
-const linking = {
-  prefixes: ['randomuserapp://'],
-  config: {
-    screens: {
-      UserList: 'user-list',
-    },
-  },
-};
+
 
 const App = () => {
   return (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer>
       <Stack.Navigator initialRouteName="Start">
         <Stack.Screen name="Start" component={StartScreen} />
         <Stack.Screen name="UserList" component={UserListScreen} />

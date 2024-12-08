@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import moment from 'moment';
+
 
 const UserListScreen = ({ navigation }) => {
   const [users, setUsers] = useState([]); 
@@ -22,6 +24,7 @@ const UserListScreen = ({ navigation }) => {
       name: user.name,
       email: user.email,
       dob: user.dob,
+
     }));
 
     const storedUsers = JSON.parse(await AsyncStorage.getItem('users')) || [];
@@ -31,7 +34,7 @@ const UserListScreen = ({ navigation }) => {
     );
 
     // Keep only the latest 100 users
-    const updatedUsers = [...uniqueUsers, ...storedUsers].slice(0, 10);
+    const updatedUsers = [...uniqueUsers, ...storedUsers].slice(0, 50);
 
     await AsyncStorage.setItem('users', JSON.stringify(updatedUsers));
     setUsers(updatedUsers);
@@ -43,45 +46,42 @@ const UserListScreen = ({ navigation }) => {
 
   
 
-  // Search function to filter users by name or email
-//   const handleSearch = (query) => {
-//     setSearchQuery(query);
+  const handleSearch = (query) => {
+    setSearchQuery(query);
 
-//     // Convert query to lowercase for case-insensitive matching
-//     const lowerQuery = query.toLowerCase();
+    // Convert query to lowercase for case-insensitive matching
+    const lowerQuery = query.toLowerCase();
 
-//     // Filter users based on query
-//     const filtered = users.filter(
-//       (user) =>
-//         user.name.first.toLowerCase().includes(lowerQuery) ||
-//         user.name.last.toLowerCase().includes(lowerQuery) ||
-//         user.email.toLowerCase().includes(lowerQuery)
-//     );
+    // Filter users based on query
+    const filtered = users.filter(
+      (user) =>
+        user.name.first.toLowerCase().includes(lowerQuery) ||
+        user.name.last.toLowerCase().includes(lowerQuery) ||
+        user.email.toLowerCase().includes(lowerQuery)
+    );
 
-//     // Update filtered users
-//     setFilteredUsers(filtered);
-//   };
+    // Update filtered users
+    setFilteredUsers(filtered);
+  };
 
-  // UseEffect to fetch data and set interval
   useEffect(() => {
-    // const interval = setInterval(fetchUsers, 20000); // Fetch users every 20 seconds
+    // const interval = setInterval(fetchUsers, 20000);
     fetchUsers(); // Initial fetch
-    // return () => clearInterval(interval); // Cleanup on component unmount
+    // return () => clearInterval(interval); 
   }, []);
 
   return (
     <View style={styles.container}>
-      {/* Search Input */}
-      {/* <TextInput
+      <TextInput
         style={styles.searchBar}
         placeholder="Search by name or email"
         value={searchQuery}
         onChangeText={handleSearch}
-      /> */}
+      />
 
       {/* User List */}
       <FlatList
-        data={filteredUsers} // Display filtered users
+        data={filteredUsers} 
         keyExtractor={(item) => item.email}
         renderItem={({ item }) => (
           <TouchableOpacity
